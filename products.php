@@ -1,33 +1,43 @@
-<?php include 'header.php'; 
+<?php include 'header.php';
+
+global $db, $db;
+ini_set('display_errors' ,0);
+session_start();
+include('dbconfig.php');
+
 ini_set('display_errors' ,0);
 session_start();
 $subcat_sql = "select id,category_name from category where is_active='1'";
-$brandsql = "select id,brand_name from brand";
+//$brandsql = "select id,brand_name from brand";
 $locsql = "select id,size_name from sizelist";
 $materialsql = "select id,material_type from material where is_active='0'";
 $productsql = "select * from products where is_active='1'";
 
-if($_GET['CID']!=''){
-  $cat = base64_decode($_GET['CID']);
-  $productsql .= " and category=".$cat;
+if (!empty($_GET['CID'])) {
+    $cat = base64_decode($_GET['CID']);
+    $productsql .= " AND category = " . intval($cat);
 }
-if($_GET['BID']!=''){
-  $cat = base64_decode($_GET['BID']);
-  $productsql .= " and brand=".$cat;   
+
+if (!empty($_GET['BID'])) {
+    $cat = base64_decode($_GET['BID']);
+    $productsql .= " AND brand = " . intval($cat);
 }
-if($_GET['SID']!=''){
- $cat = base64_decode($_GET['SID']);
- $productsql .= " and filter_size=".$cat;
+
+if (!empty($_GET['SID'])) {
+    $cat = base64_decode($_GET['SID']);
+    $productsql .= " AND filter_size = " . intval($cat);
 }
-if($_GET['MID']!=''){
- $cat = base64_decode($_GET['MID']);
- $productsql .= " and material=".$cat;
+
+if (!empty($_GET['MID'])) {
+    $cat = base64_decode($_GET['MID']);
+    $productsql .= " AND material = " . intval($cat);
 }
+
 
 $productsql .= " ORDER BY id DESC";
 //echo $productsql;
 $subcatlist =mysqli_query($db,$subcat_sql);
-$brandlist = mysqli_query($db,$brandsql);
+//$brandlist = mysqli_query($db,$brandsql);
 $sizelist = mysqli_query($db,$locsql);
 $matlist = mysqli_query($db,$materialsql);
 $productlist = mysqli_query($db,$productsql);
@@ -151,10 +161,8 @@ $productlist = mysqli_query($db,$productsql);
                                 <?php } ?>
 
                             </div> -->
-                           
-                           
-                        
-                        
+
+
                 </div>
             </form>
         </div>
@@ -168,7 +176,9 @@ $productlist = mysqli_query($db,$productsql);
 <div class="row" id="product-list">
     <?php 
     $productsPerPage = 15; // Number of products per page
-    $count = count($productlist);
+//    $count = count($productlist);
+    $count = mysqli_num_rows($productlist);
+
     foreach ($productlist as $index => $pvalue) {
     ?>
     <div class="col-md-4 col-6 product-item">
@@ -223,8 +233,6 @@ $productlist = mysqli_query($db,$productsql);
     }
 ?>
 
-
-
          </div>
 
      </section>
@@ -254,9 +262,6 @@ $(document).ready(function() {
         $('#page-info').text('Page ' + page + ' of ' + totalPages);
 
         // Update pagination buttons
-
-
-    
 
         updatePaginationButtons(page);
 

@@ -78,7 +78,6 @@ class Product
         }
 		
 		
-		
 		if (move_uploaded_file($file["tmp_name"], $targetFilePath)){
 				$query = "INSERT INTO `products`(`name`, `sqft_price`, `category`, `material`, `group_name`, `imagelist`, `is_active`) 
 				VALUES (?,?,?,?,?,?,1)";
@@ -91,6 +90,18 @@ class Product
 
 			try {
 				$stmt->execute();
+
+                // ✅ After successful product insert, generate or update ISBN password
+                $isbn = mysqli_real_escape_string($this->db, $isbn_no);
+                $generated_password = 'Login@123';
+
+// Check if ISBN already exists in book_login table
+                $check = $this->db->query("SELECT * FROM book_login WHERE isbn='$isbn'");
+                if ($check->num_rows > 0) {
+                    $this->db->query("UPDATE book_login SET password='$generated_password' WHERE isbn='$isbn'");
+                } else {
+                    $this->db->query("INSERT INTO book_login (isbn, password) VALUES ('$isbn', '$generated_password')");
+                }
 				return array(
 					'status' => true,
 					'message' => 'Product Created successfully with file upload.'

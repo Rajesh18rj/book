@@ -185,25 +185,12 @@ if(isset($_GET["delete"]) && $_GET["delete"] == "delete"){
 
                                                 </td>
                                             </tr>
-
-
-
                                     <?php
-
-
-                                            }
+                                    }
                                              
                                                                     
                                     ?>
-
-
-
-                                  
-
-
                                 </tbody>
-                            
-                            
                                 
                             </table>
                         </div>                  

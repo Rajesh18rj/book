@@ -1,11 +1,8 @@
 <?php
 global $db, $db;
-ini_set('display_errors' ,1);
+ini_set('display_errors' ,0);
 session_start();
-
-$message = "";
-
-include('dbconfig.php'); 
+include('dbconfig.php');
 
 $subcat_sql = "select id,category_name from category where is_active='0'";
 $subcatlist =mysqli_query($db,$subcat_sql);
@@ -50,9 +47,9 @@ if (isset($_GET['RID']) && $_GET['RID'] != "") {
   foreach ($subcatlist as $value) {
   $catarray[$value['id']] = $value;
   }
-  foreach ($brandlist as $value1) {
-  $brandarray[$value1['id']] = $value1;
-  }
+//  foreach ($brandlist as $value1) {
+//  $brandarray[$value1['id']] = $value1;
+//  }
   foreach ($matlist as $value2) {
   $matarray[$value2['id']] = $value2;
   }
@@ -63,7 +60,7 @@ if (isset($_GET['RID']) && $_GET['RID'] != "") {
 
 if(isset($_POST['formsubmit'])) {
     $created_date = date("Y-m-d h:i:sa");
-  $created_by = $_SESSION['user_id'];
+    $created_by = $_SESSION['user_id'];
 	$sqft_price = $_POST['sqft_price'];
 	$name = $_POST['name'];
 	$brand = $_POST['brand'];
@@ -95,21 +92,44 @@ for( $i=0 ; $i < $total ; $i++ ) {
   $target_dir = "./uploads/";
   $target_file = $target_dir . basename($file_name);
   if(!move_uploaded_file($file_tmp, $target_dir.$Filename)) {
-    echo '<script>alert("Sorry, there was a problem uploading your file.")</script>'; 
-  } 
+    echo '<script>alert("Sorry, there was a problem uploading your file.")</script>';
+  }
 }
 
-    if (isset($_GET['RID']) && $_GET['RID'] != '')
-  { 
-     $sql = "update products set `name`='$name', `sqft_price`='$sqft_price', `category`='$category', `brand`='$brand', `actual_size`='$actual_size', `material`='$material', `details`='$details', `description`='$description', `group_name`='$group_name', `filter_size`='$filter_size', `sink_type`='$sink_type', `finish`='$finish', `applications`='$applications', `has_sample`='$has_sample', `quality`='$quality', `coverage_area`='$coverage_area', `no_pcs_inbox`='$no_pcs_inbox',  `updated_by`='$created_by', `updated_date`='$created_date' where id = '".$_GET['RID']."'";
-     $result = mysqli_query($db,$sql);
-     header("Location:viewdetails.php?view=products");
-  }else {
-  $Filename = json_encode($Filenames,1);
+    if (isset($_GET['RID']) && $_GET['RID'] != '') {
+        $sql = "update products set `name`='$name', `sqft_price`='$sqft_price', `category`='$category', `brand`='$brand', `actual_size`='$actual_size', `material`='$material', `details`='$details', `description`='$description', `group_name`='$group_name', `filter_size`='$filter_size', `sink_type`='$sink_type', `finish`='$finish', `applications`='$applications', `has_sample`='$has_sample', `quality`='$quality', `coverage_area`='$coverage_area', `no_pcs_inbox`='$no_pcs_inbox',  `updated_by`='$created_by', `updated_date`='$created_date' where id = '".$_GET['RID']."'";
+        $result = mysqli_query($db,$sql);
+        echo '<script>alert("Book updated successfully!");</script>';
+        header("Location:viewdetails.php?view=products");
 
-	  $sql = "INSERT INTO `products`(`name`, `sqft_price`, `category`, `brand`, `actual_size`, `material`, `details`, `description`, `group_name`, `filter_size`, `sink_type`, `finish`, `applications`, `has_sample`, `quality`, `coverage_area`, `no_pcs_inbox`, `imagelist`, `additional_attributes`, `is_active`, `created_by`, `created_date`) values ('$name','$sqft_price','$category','$brand','$actual_size','$material','$details','$description','$group_name','$filter_size','$sink_type','$finish','$applications','$has_sample','$quality','$coverage_area','$no_pcs_inbox','$Filename','','0','$created_by','$created_date')";
-	$result = mysqli_query($db,$sql);
-}
+        // Generate ISBN password
+        $isbn = $_POST['group_name']; // ISBN
+        $generated_password = 'Login@123';
+        $check_login = mysqli_query($db, "SELECT * FROM book_login WHERE isbn='$isbn'");
+        if(mysqli_num_rows($check_login) > 0){
+            mysqli_query($db, "UPDATE book_login SET password='$generated_password' WHERE isbn='$isbn'");
+        } else {
+            mysqli_query($db, "INSERT INTO book_login (isbn, password) VALUES ('$isbn', '$generated_password')");
+        }
+
+    } else {
+        $Filename = json_encode($Filenames,1);
+
+        $sql = "INSERT INTO `products`(`name`, `sqft_price`, `category`, `brand`, `actual_size`, `material`, `details`, `description`, `group_name`, `filter_size`, `sink_type`, `finish`, `applications`, `has_sample`, `quality`, `coverage_area`, `no_pcs_inbox`, `imagelist`, `additional_attributes`, `is_active`, `created_by`, `created_date`) values ('$name','$sqft_price','$category','$brand','$actual_size','$material','$details','$description','$group_name','$filter_size','$sink_type','$finish','$applications','$has_sample','$quality','$coverage_area','$no_pcs_inbox','$Filename','','1','$created_by','$created_date')";
+        $result = mysqli_query($db,$sql);
+        echo '<script>alert("Book saved successfully!");</script>';
+
+        // Generate ISBN password
+        $isbn = $_POST['group_name']; // ISBN
+        $generated_password = 'Login@123';
+        $check_login = mysqli_query($db, "SELECT * FROM book_login WHERE isbn='$isbn'");
+        if(mysqli_num_rows($check_login) > 0){
+            mysqli_query($db, "UPDATE book_login SET password='$generated_password' WHERE isbn='$isbn'");
+        } else {
+            mysqli_query($db, "INSERT INTO book_login (isbn, password) VALUES ('$isbn', '$generated_password')");
+        }
+    }
+
 
 $created_date = '';
   $created_by = '';
@@ -154,19 +174,19 @@ include("adminheader.php"); ?>
                     <div class="row">
                     <input type="hidden" value="0" name="category" class="form-control">
                   <input type="hidden" value="0" name="brand" class="form-control">
-                     <input type="hidden" value="0"  name="filter_size" class="form-control"> 
-                        
+                     <input type="hidden" value="0"  name="filter_size" class="form-control">
+
                          <div class="col-md-4">
                         <div class="form-group">
                           <label class="bmd-label-floating">Book Title</label>
                           <input type="text" name="name" value="<?php echo $name;?>" class="form-control">
                         </div>
                       </div>
-                        
+
                       <div class="col-md-4">
                         <div class="form-group">
                           <label class="bmd-label-floating">Author</label>
-                         <input type="text" name="material" class="form-control"  value="<?php echo $material;?>" >
+                         <input type="text" name="material" class="form-control"  value="<?php echo $material;?>">
                         </div>
                       </div>
                       <div class="col-md-4">
@@ -175,8 +195,8 @@ include("adminheader.php"); ?>
                           <input type="text" name="group_name" class="form-control" value="<?php echo $group_name;?>" >
                         </div>
                       </div>
-                     
-                    
+
+
                       <div class="col-md-4">
                         <div class="form-group">
                           <label class="bmd-label-floating">Book Price</label>
@@ -188,38 +208,38 @@ include("adminheader.php"); ?>
                         <input type="hidden" value=""  name="finish" value="<?php echo $finish;?>" class="form-control">
                         <input type="hidden" value=""  name="quality" value="<?php echo $quality;?>" class="form-control">
                         <input type="hidden" value=""  name="coverage_area" value="<?php echo $coverage_area;?>" class="form-control">
-                        <input type="hidden"  name="has_sample"  value="1" <?php echo $has_sample=='1'?'checked':'';?> > 
-                          <input type="hidden"   name="has_sample" value="0" <?php echo $has_sample=='0'?'checked':'';?> > 
+                        <input type="hidden"  name="has_sample"  value="1" <?php echo $has_sample=='1'?'checked':'';?> >
+                          <input type="hidden"   name="has_sample" value="0" <?php echo $has_sample=='0'?'checked':'';?> >
 <input type="hidden" value="" name="no_pcs_inbox" value="<?php echo $no_pcs_inbox;?>" class="form-control">
-                        <input type="hidden" value=""  name="details" class="form-control"> 
-                        
-                        <input type="hidden" value=""  name="description" class="form-control"> 
+                        <input type="hidden" value=""  name="details" class="form-control">
+
+                        <input type="hidden" value=""  name="description" class="form-control">
                         <input type="hidden" name="applications" value="">
-                      <div class="col-md-4"> 
-                      <?php 
+                      <div class="col-md-4">
+                      <?php
                       if(empty($_GET['RID'])){ ?>
-                      
+
                           <label class="bmd-label-floating">Upload Image</label> <?php foreach ($Filenamelist as $key => $value) { ?>
                               <img src="uploads/<?php echo $value; ?>" width="50px"/>
                           <?php } ?>
-                            
-                          
+
+
                           <input id="file-input" type="file" class="form-control" multiple name="Filename[]">
                           <?php } ?>
                       </div>
-                        
+
                         <div class="col-md-4"><br>
-                          <button type="submit" name="formsubmit" class="btn btn-primary pull-right"><?php echo $submit_name ?></button>   
+                          <button type="submit" name="formsubmit" class="btn btn-primary pull-right"><?php echo $submit_name ?></button>
                         </div>
-                     
+
                     </div>
-                    
+
                     <div class="clearfix"></div>
                   </form>
                 </div>
               </div>
             </div>
-         
+
           </div>
         </div>
       </div>

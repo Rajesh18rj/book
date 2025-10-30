@@ -14,7 +14,7 @@ include 'dbconfig.php';
 	    <link rel="preconnect" href="https://fonts.gstatic.com">
 		<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,500&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-		<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 	    <link type="text/css" rel="stylesheet" href="css/bootstrap.min.css"/>
 	    <link type="text/css" rel="stylesheet" href="css/elegant-icons.css"/>
 	    <link type="text/css" rel="stylesheet" href="css/owl.carousel.min.css"/>
@@ -63,6 +63,9 @@ include 'dbconfig.php';
 		                    <li class="nav-item">
 		                        <a class="nav-link" href="contactus.php">Contact Us</a>
 		                    </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="book-login.php">Login</a>
+                            </li>
 		                </ul>
 		            </div>
 		        </div>

@@ -58,6 +58,26 @@ $(document).ready(function(){
 	End Popup message
 -->
 
+    <style>
+        .author-login-cta .btn-light:hover {
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        @media (max-width: 768px) {
+            .author-login-cta .d-flex {
+                flex-direction: column;
+                text-align: center;
+            }
+            .author-login-cta .btn {
+                width: 100%;
+            }
+        }
+    </style>
+
+
+
 <section class="whySection whybg">
 		<div class="container">
 					<div class="row">

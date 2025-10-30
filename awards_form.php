@@ -97,8 +97,7 @@ include("adminheader.php"); ?>
                       </div>
                      
                     </div>
-                
-                    
+
                      <button type="submit" name="formsubmit" class="btn btn-primary pull-right"><?php echo $submit_name ?></button>
                     <div class="clearfix"></div>
                   </form>
